@@ -19,6 +19,7 @@
     "@types/react-responsive": "^8.0.2",
     "react": "^17.0.2",
     "react-burger-menu": "^3.0.6",
+    "react-calendar": "^3.4.0",
     "react-dom": "^17.0.2",
     "react-redux": "^7.2.0",
     "react-responsive": "^8.2.0",
@@ -50,6 +51,7 @@
   },
   "devDependencies": {
     "@fortawesome/free-brands-svg-icons": "^5.15.3",
+    "@types/react-calendar": "^3.4.0",
     "@types/styled-components": "^5.1.10",
     "autoprefixer": "9",
     "postcss": "7",
