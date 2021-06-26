@@ -4,6 +4,9 @@
   "private": true,
   "dependencies": {
     "@craco/craco": "^6.1.2",
+    "@fortawesome/fontawesome-svg-core": "^1.2.35",
+    "@fortawesome/free-solid-svg-icons": "^5.15.3",
+    "@fortawesome/react-fontawesome": "^0.1.14",
     "@reduxjs/toolkit": "^1.5.1",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
@@ -46,6 +49,7 @@
     ]
   },
   "devDependencies": {
+    "@fortawesome/free-brands-svg-icons": "^5.15.3",
     "@types/styled-components": "^5.1.10",
     "autoprefixer": "9",
     "postcss": "7",
