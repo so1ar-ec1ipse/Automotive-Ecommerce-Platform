@@ -15,7 +15,6 @@ export class CarsResolver {
             throw err;
         });
     }
-<<<<<<< HEAD
 
     @Mutation(returns => Car)
     public async addNewCar(@Args("newCarData") newCarData: NewCarInput): Promise<Car> {
@@ -24,6 +23,3 @@ export class CarsResolver {
         })
     }
 }
-=======
-}
->>>>>>> 4b55ca3fdf37fb39d535d7353f43c6ea2b5775da
