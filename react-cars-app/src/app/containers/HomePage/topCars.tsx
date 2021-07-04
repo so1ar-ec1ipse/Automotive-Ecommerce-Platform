@@ -8,10 +8,11 @@ import '@brainhubeu/react-carousel/lib/style.css';
 import { useMediaQuery } from 'react-responsive';
 import { SCREENS } from '../../components/responsive';
 import carService from '../../services/carService';
-import { Dispatch } from '@reduxjs/toolkit';
+import { createSelector, Dispatch } from '@reduxjs/toolkit';
 import { GetCars_cars } from '../../services/carService/__generated__/GetCars';
 import { setTopCars } from './slice';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { makeSelectTopCars } from './selectors';
 
 const TopCarsContainer = styled.div`
   ${tw`
@@ -49,15 +50,31 @@ const CarsContainer = styled.div`
     `};
 `;
 
+const EmptyCars = styled.div`
+  ${tw`
+    w-full
+    flex
+    items-center
+    justify-center
+    text-sm
+    text-gray-500
+  `};
+`;
+
 const actionDispatch = (dispatch: Dispatch) => ({
   setTopCars: (cars: GetCars_cars[]) => dispatch(setTopCars(cars)),
 });
+
+const stateSelector = createSelector(makeSelectTopCars, (topCars) => ({
+  topCars,
+}));
 
 export function TopCars() {
   const [current, setCurrent] = useState(0);
 
   const isMobile = useMediaQuery({ maxWidth: SCREENS.sm });
 
+  const { topCars } = useSelector(stateSelector);
   const { setTopCars } = actionDispatch(useDispatch());
 
   const fetchTopCars = async () => {
@@ -95,19 +112,20 @@ export function TopCars() {
     fetchTopCars();
   }, []);
 
-  const cars = [
-    <Car {...testCar} />,
-    <Car {...testCar2} />,
-    <Car {...testCar} />,
-    <Car {...testCar2} />,
-    <Car {...testCar} />,
-  ];
+  const isEmptyTopCars = !topCars || topCars.length === 0;
+
+  const cars =
+    (!isEmptyTopCars &&
+      topCars.map((car) => <Car {...car} thumbnailSrc={car.thumbnailUrl} />)) ||
+    [];
 
   const numberOfDots = isMobile ? cars.length : Math.ceil(cars.length / 3);
 
   return (
     <TopCarsContainer>
       <Title>Explore Our Top Deals</Title>
+      {isEmptyTopCars && <EmptyCars>No Cars To Show!</EmptyCars>}
+      (!isEmptyTopCars &&
       <CarsContainer>
         <Carousel
           value={current}
@@ -147,6 +165,7 @@ export function TopCars() {
         />
         <Dots value={current} onChange={setCurrent} number={numberOfDots} />
       </CarsContainer>
+      )
     </TopCarsContainer>
   );
 }
