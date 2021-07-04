@@ -13,6 +13,7 @@ import { GetCars_cars } from '../../services/carService/__generated__/GetCars';
 import { setTopCars } from './slice';
 import { useDispatch, useSelector } from 'react-redux';
 import { makeSelectTopCars } from './selectors';
+import MoonLoader from 'react-spinners/MoonLoader';
 
 const TopCarsContainer = styled.div`
   ${tw`
@@ -61,6 +62,18 @@ const EmptyCars = styled.div`
   `};
 `;
 
+const LoadingContainer = styled.div`
+  ${tw`
+    w-full
+    mt-9
+    flex
+    items-center
+    justify-center
+    text-base
+    text-black
+  `};
+`;
+
 const actionDispatch = (dispatch: Dispatch) => ({
   setTopCars: (cars: GetCars_cars[]) => dispatch(setTopCars(cars)),
 });
@@ -69,8 +82,11 @@ const stateSelector = createSelector(makeSelectTopCars, (topCars) => ({
   topCars,
 }));
 
+// const wait = (timeout: number) => new Promise((rs) => setTimeout(rs, timeout));
+
 export function TopCars() {
   const [current, setCurrent] = useState(0);
+  const [isLoading, setLoading] = useState(false);
 
   const isMobile = useMediaQuery({ maxWidth: SCREENS.sm });
 
@@ -78,12 +94,14 @@ export function TopCars() {
   const { setTopCars } = actionDispatch(useDispatch());
 
   const fetchTopCars = async () => {
+    setLoading(true);
     const cars = await carService.getCars().catch((err) => {
       console.log('Error: ', err);
     });
 
     console.log('Cars: ', cars);
     if (cars) setTopCars(cars);
+    setLoading(false);
   };
 
   const testCar: ICar = {
@@ -124,8 +142,13 @@ export function TopCars() {
   return (
     <TopCarsContainer>
       <Title>Explore Our Top Deals</Title>
-      {isEmptyTopCars && <EmptyCars>No Cars To Show!</EmptyCars>}
-      (!isEmptyTopCars &&
+      {isLoading && (
+        <LoadingContainer>
+          <MoonLoader loading size={20} />
+        </LoadingContainer>
+      )}
+      {isEmptyTopCars && !isLoading && <EmptyCars>No Cars To Show!</EmptyCars>}
+      (!isEmptyTopCars && !isLoading &&
       <CarsContainer>
         <Carousel
           value={current}
